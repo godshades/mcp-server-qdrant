@@ -1,3 +1,5 @@
+# docker-compose.yml to be placed in the root of your forked repository
+
 version: '3.8'
 
 services:
@@ -15,21 +17,20 @@ services:
       QDRANT__SERVICE__HTTP_PORT: 6334
 
   mcp-server-qdrant:
-    # This tells Docker to build the image from the Dockerfile
-    # in the current directory (the root of the repo).
     build: .
     container_name: mcp_qdrant_server
     restart: always
     ports:
       - "8100:8000"
     environment:
-      # We will set the API_KEY in the Portainer UI instead of hardcoding it here
       QDRANT_URL: "http://qdrant:6333"
       FASTMCP_HOST: "0.0.0.0"
       FASTMCP_PORT: 8000
       COLLECTION_NAME: "my_mcp_collection"
       EMBEDDING_PROVIDER: "fastembed"
       EMBEDDING_MODEL: "sentence-transformers/all-MiniLM-L6-v2"
+      # Add this line to disable compatibility check
+      QDRANT_CLIENT_CHECK_COMPATIBILITY: "False"
     depends_on:
       - qdrant
 

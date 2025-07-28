@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant_server
+    restart: always
+    volumes:
+      - qdrant_data:/qdrant/storage
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6333
+      QDRANT__SERVICE__HTTP_PORT: 6334
+
+  mcp-server-qdrant:
+    # This tells Docker to build the image from the Dockerfile
+    # in the current directory (the root of the repo).
+    build: .
+    container_name: mcp_qdrant_server
+    restart: always
+    ports:
+      - "8100:8000"
+    environment:
+      # We will set the API_KEY in the Portainer UI instead of hardcoding it here
+      QDRANT_URL: "http://qdrant:6333"
+      FASTMCP_HOST: "0.0.0.0"
+      FASTMCP_PORT: 8000
+      COLLECTION_NAME: "my_mcp_collection"
+      EMBEDDING_PROVIDER: "fastembed"
+      EMBEDDING_MODEL: "sentence-transformers/all-MiniLM-L6-v2"
+    depends_on:
+      - qdrant
+
+volumes:
+  qdrant_data:

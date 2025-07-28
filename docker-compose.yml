@@ -30,7 +30,7 @@ services:
       EMBEDDING_PROVIDER: "fastembed"
       EMBEDDING_MODEL: "sentence-transformers/all-MiniLM-L6-v2"
       # Add this line to disable compatibility check
-      QDRANT_CLIENT_CHECK_COMPATIBILITY: "False"
+      CHECK_COMPATIBILITY: "False"
     depends_on:
       - qdrant
 
